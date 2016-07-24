@@ -43,7 +43,7 @@ def get_celery_stats(agent):
             if 'uuid' in event:
                 task = state.tasks.get(event['uuid'])
                 logger.debug('current task: %s', task)
-                if task.state in ['SUCCESS', 'FAILURE'] and \
+                if task.state in ['SUCCESS', 'FAILURE', 'RETRY'] and \
                         task.name is not None:
                     runtime = task.runtime if task.runtime else 0
                     data = [{

@@ -62,3 +62,19 @@ def get_celery_stats(agent):
         except:
             logger.exception('cannot parse task event')
 
+    while agent.run_event.is_set():
+        try:
+            with app.connection() as connection:
+                Receiver = app.subclass_with_self(TourbillonReceiver,
+                                                  reverse='events.Receiver')
+                recv = Receiver(agent.run_event, connection, handlers={
+                    '*': handle_event,
+                })
+
+                logger.debug('start capturing events')
+                recv.capture()
+        except:
+            logger.exception('event receiver failed: sleep 1 seconds')
+            time.sleep(1)
+
+    logger.debug('get_celery_stats exited')

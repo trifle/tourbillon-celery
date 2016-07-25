@@ -53,6 +53,7 @@ def get_celery_stats(agent):
                             'state': task.state,
                         },
                         'fields': {
+                            'uuid': event['uuid'],
                             'runtime': float(runtime),
                             'timestamp': float(task.timestamp),
                             'started': float(task.started)
